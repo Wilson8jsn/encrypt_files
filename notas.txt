@@ -1,3 +1,7 @@
+ # Install  encrypt dependencies
+
+ pip3 install cryptography
+ 
  # encrypt files
  
  python3 encrypt_files.py encrypt   /Users/wilssoncasstillo/Movies/prueba.txt 
@@ -6,3 +10,4 @@
 # decrypt files
 
   python3 encrypt_files.py decrypt   /Users/wilssoncasstillo/Movies/prueba.txt 
+8
