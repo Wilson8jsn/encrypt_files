@@ -4,10 +4,12 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.fernet import Fernet
 import base64
 import os
+import getpass
 
-# Derivar una clave de una contraseña
-def derive_key_from_password(password):
-    salt = os.urandom(16)
+
+def derive_key_from_password(password, salt=None):
+    if not salt:
+        salt = os.urandom(16)
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
@@ -18,19 +20,7 @@ def derive_key_from_password(password):
     key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
     return key, salt
 
-# Cargar la clave desde una contraseña y sal
-def load_key_from_password(password, salt):
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-        backend=default_backend()
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
-    return key
 
-# Encriptar un archivo
 def encrypt_file(file_name, password):
     key, salt = derive_key_from_password(password)
     fernet = Fernet(key)
@@ -43,7 +33,7 @@ def encrypt_file(file_name, password):
     with open(file_name, "wb") as encrypted_file:
         encrypted_file.write(salt + encrypted)
 
-# Desencriptar un archivo
+
 def decrypt_file(file_name, password):
     with open(file_name, "rb") as encrypted_file:
         data = encrypted_file.read()
@@ -51,7 +41,7 @@ def decrypt_file(file_name, password):
     salt = data[:16]
     encrypted = data[16:]
     
-    key = load_key_from_password(password, salt)
+    key, _ = derive_key_from_password(password, salt)
     fernet = Fernet(key)
     decrypted = fernet.decrypt(encrypted)
 
@@ -60,7 +50,6 @@ def decrypt_file(file_name, password):
 
 if __name__ == "__main__":
     import sys
-    import getpass
 
     if len(sys.argv) != 3:
         print("Uso: python encrypt_files.py <encrypt/decrypt> <file_path>")
