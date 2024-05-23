@@ -4,10 +4,9 @@
  
  # encrypt files
  
- python3 encrypt_files.py encrypt   /Users/wilssoncasstillo/Movies/prueba.txt 
+ python3 encrypt_files.py encrypt   /Users/wilssoncasstillo/Movies/prueba.txt.zip
 
 
 # decrypt files
 
-  python3 encrypt_files.py decrypt   /Users/wilssoncasstillo/Movies/prueba.txt 
-8
+  python3 encrypt_files.py decrypt   /Users/wilssoncasstillo/Movies/prueba.txt.zip
